@@ -5,8 +5,6 @@ import './App.css';
 
 class App extends Component {
 
-  state = { resultado: ''};
-
   calcularPrazo = async (dados) => {
     const encodedCodigoServico = encodeURIComponent(dados.codigoServico);
     const encodedCepOrigem = encodeURIComponent(dados.cepOrigem);

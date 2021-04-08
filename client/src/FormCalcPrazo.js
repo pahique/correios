@@ -22,18 +22,22 @@ const FormCalcPrazo = props => {
     }
 
     const handleClickCalcPrazo = () => {
-        props.onCalcular({ codigoServico: codigoServico,
-                           cepOrigem: cepOrigem,
-                           cepDestino: cepDestino })
-             .then(result => {
-                console.log(result);
-                if (result) {
-                    setResultado(result);
+        props.onCalcular({ codigoServico: (codigoServico ? codigoServico : ''),
+                           cepOrigem: (cepOrigem ? cepOrigem : ''),
+                           cepDestino: (cepDestino ? cepDestino : '') })
+             .then(resultado => {
+                console.log(resultado);
+                if (resultado && resultado.servico) {
+                    setResultado(resultado);
                     setMessage('');
                 } else {
                     setResultado('');
-                    setMessage('Erro ao calcular prazo');
+                    setMessage(resultado.message ? resultado.message : 'Erro ao calcular prazo');
                 }
+             })
+             .catch((error) => {
+                    setResultado('');
+                    setMessage('Erro ao acessar API');
              });
     }
 

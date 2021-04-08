@@ -72,7 +72,9 @@ public class CorreiosController {
         }
         if (!responseMap.isEmpty()) {
             responseMap.put("status", "error");
-            result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMap);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Access-Control-Allow-Origin", "*");
+            result = ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(responseMap);
         } else {
 
             try {
@@ -102,7 +104,9 @@ public class CorreiosController {
                 responseMap = new HashMap();
                 responseMap.put("status", "error");
                 responseMap.put("message", e.getMessage());
-                result = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Access-Control-Allow-Origin", "*");
+                result = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(responseMap);
             }
         }
         return result;

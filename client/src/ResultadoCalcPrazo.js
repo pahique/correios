@@ -6,7 +6,7 @@ function renderRow(key, propertyName, propertyValue) {
 
 function renderResultado(resultado) {
   let rows = [];
-  if (resultado) {
+  if (resultado && resultado.servico) {
     console.log("Servico: " + resultado.servico);
     let servico = JSON.parse(resultado.servico);
     rows.push(renderRow('codigoServico', 'Código do Serviço', servico.codigo));

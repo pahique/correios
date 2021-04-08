@@ -73,7 +73,10 @@ main {
 }
 
 .error {
+  height: 1em;
   color: red;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .success {
