@@ -3,6 +3,8 @@ package br.com.deere.correios.controller;
 import br.com.deere.correios.model.CalcPrazoResultado;
 import br.com.deere.correios.model.Servico;
 import br.com.deere.correios.service.CorreiosService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import java.util.Map;
 
 @RestController
 public class CorreiosController {
+
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     private CorreiosService service;
@@ -54,19 +58,17 @@ public class CorreiosController {
     public ResponseEntity getPrazoEntregaCorreios(@RequestParam String codigoServico,
                                                   @RequestParam String cepOrigem,
                                                   @RequestParam String cepDestino) {
-        ResponseEntity result = null;
+        ResponseEntity result;
         Map<String, Object> responseMap = new HashMap();
         if (codigoServico == null || codigoServico.trim().isEmpty()) {
-            responseMap.put("status", "fail");
             responseMap.put("message", "codigoServico obrigatório");
         } else if (cepOrigem == null || cepOrigem.trim().isEmpty()) {
-            responseMap.put("status", "fail");
             responseMap.put("message", "cepOrigem obrigatório");
         } else if (cepDestino == null || cepDestino.trim().isEmpty()) {
-            responseMap.put("status", "fail");
             responseMap.put("message", "cepDestino obrigatório");
         }
         if (!responseMap.isEmpty()) {
+            responseMap.put("status", "error");
             result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMap);
         } else {
 
@@ -76,14 +78,13 @@ public class CorreiosController {
                 if (servicos != null && !servicos.isEmpty()) {
                     responseMap = new HashMap();
                     responseMap.put("status", "success");
-                    responseMap.put("dataMaxEntrega", servicos.get(0).getDataMaxEntrega());
-                    responseMap.put("message", servicos.get(0).getMsgErro());
+                    responseMap.put("servico", servicos.get(0));
                     result = ResponseEntity.ok().body(responseMap);
                 } else {
                     result = ResponseEntity.noContent().build();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error calling Correios API", e);
                 responseMap = new HashMap();
                 responseMap.put("status", "error");
                 responseMap.put("message", e.getMessage());
