@@ -23,6 +23,9 @@ public class Servico {
     @XmlElement(name = "MsgErro")
     private String msgErro;
 
+    @XmlElement(name = "obsFim")
+    private String obsFim;
+
     @XmlElement(name = "DataMaxEntrega")
     private String dataMaxEntrega;
 
@@ -76,6 +79,14 @@ public class Servico {
 
     public void setMsgErro(String msgErro) {
         this.msgErro = msgErro;
+    }
+
+    public String getObsFim() {
+        return obsFim;
+    }
+
+    public void setObsFim(String obsFim) {
+        this.obsFim = obsFim;
     }
 
     public String getDataMaxEntrega() {
