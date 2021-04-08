@@ -3,9 +3,12 @@ package br.com.deere.correios.controller;
 import br.com.deere.correios.model.CalcPrazoResultado;
 import br.com.deere.correios.model.Servico;
 import br.com.deere.correios.service.CorreiosService;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,8 +81,19 @@ public class CorreiosController {
                 if (servicos != null && !servicos.isEmpty()) {
                     responseMap = new HashMap();
                     responseMap.put("status", "success");
-                    responseMap.put("servico", servicos.get(0));
-                    result = ResponseEntity.ok().body(responseMap);
+                    Servico servico = servicos.get(0);
+                    ObjectMapper mapper = new ObjectMapper();
+                    String jsonServico = mapper.writeValueAsString(servico);
+                    responseMap.put("servico", jsonServico);
+//                    responseMap.put("prazoEntrega", servico.getPrazoEntrega());
+//                    responseMap.put("entregaDomiciliar", servico.getEntregaDomiciliar());
+//                    responseMap.put("entregaSabado", servico.getEntregaSabado());
+//                    responseMap.put("dataMaxEntrega", servico.getDataMaxEntrega());
+//                    responseMap.put("erro", servico.getErro());
+//                    responseMap.put("msgErro", servico.getMsgErro());
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Access-Control-Allow-Origin", "*");
+                    result = ResponseEntity.ok().headers(headers).body(responseMap);
                 } else {
                     result = ResponseEntity.noContent().build();
                 }
