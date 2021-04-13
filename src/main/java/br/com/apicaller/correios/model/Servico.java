@@ -1,4 +1,4 @@
-package br.com.deere.correios.model;
+package br.com.apicaller.correios.model;
 
 import javax.xml.bind.annotation.*;
 

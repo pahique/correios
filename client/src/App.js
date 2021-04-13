@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import FormCalcPrazo from './FormCalcPrazo';
 
 import './App.css';
@@ -14,7 +14,6 @@ class App extends Component {
         fetch('http://localhost:8080/api/calcprazo?codigoServico='+encodedCodigoServico+'&cepOrigem='+encodedCepOrigem+'&cepDestino='+encodedCepDestino)
         .then(res => res.json())
         .then((data) => {
-          //console.log(data);
           resolve(data);
         })
         .catch((error) => {

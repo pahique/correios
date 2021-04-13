@@ -8,7 +8,7 @@
 		<version>2.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.deere</groupId>
+	<groupId>br.com.apicaller</groupId>
 	<artifactId>correios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>calcprecoprazo</name>

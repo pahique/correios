@@ -1,4 +1,4 @@
-package br.com.deere.correios;
+package br.com.apicaller.correios;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

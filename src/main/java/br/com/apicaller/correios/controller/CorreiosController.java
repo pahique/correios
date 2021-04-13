@@ -1,9 +1,9 @@
-package br.com.deere.correios.controller;
+package br.com.apicaller.correios.controller;
 
-import br.com.deere.correios.model.CalcPrazoResultado;
-import br.com.deere.correios.model.Servico;
-import br.com.deere.correios.service.CorreiosService;
-import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import br.com.apicaller.correios.model.GetPrazoEntregaResponse;
+import br.com.apicaller.correios.service.CorreiosService;
+import br.com.apicaller.correios.model.CalcPrazoResultado;
+import br.com.apicaller.correios.model.Servico;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,19 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class CorreiosController {
@@ -61,54 +55,48 @@ public class CorreiosController {
     public ResponseEntity getPrazoEntregaCorreios(@RequestParam String codigoServico,
                                                   @RequestParam String cepOrigem,
                                                   @RequestParam String cepDestino) {
-        ResponseEntity result;
-        Map<String, Object> responseMap = new HashMap();
+        ResponseEntity response;
+        GetPrazoEntregaResponse result = new GetPrazoEntregaResponse();
         if (codigoServico == null || codigoServico.trim().isEmpty()) {
-            responseMap.put("message", "codigoServico obrigatório");
+            result.setStatus("error");
+            result.setMessage("Código do Serviço é obrigatório");
         } else if (cepOrigem == null || cepOrigem.trim().isEmpty()) {
-            responseMap.put("message", "cepOrigem obrigatório");
+            result.setStatus("error");
+            result.setMessage("CEP de Origem é obrigatório");
         } else if (cepDestino == null || cepDestino.trim().isEmpty()) {
-            responseMap.put("message", "cepDestino obrigatório");
+            result.setStatus("error");
+            result.setMessage("CEP de Destino é obrigatório");
         }
-        if (!responseMap.isEmpty()) {
-            responseMap.put("status", "error");
+        if ("error".equals(result.getStatus())) {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
-            result = ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(responseMap);
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(result);
         } else {
 
             try {
                 CalcPrazoResultado calcPrazo = service.calculaPrazo(codigoServico, cepOrigem, cepDestino);
                 List<Servico> servicos = calcPrazo.getServicos();
                 if (servicos != null && !servicos.isEmpty()) {
-                    responseMap = new HashMap();
-                    responseMap.put("status", "success");
-                    Servico servico = servicos.get(0);
-                    ObjectMapper mapper = new ObjectMapper();
-                    String jsonServico = mapper.writeValueAsString(servico);
-                    responseMap.put("servico", jsonServico);
-//                    responseMap.put("prazoEntrega", servico.getPrazoEntrega());
-//                    responseMap.put("entregaDomiciliar", servico.getEntregaDomiciliar());
-//                    responseMap.put("entregaSabado", servico.getEntregaSabado());
-//                    responseMap.put("dataMaxEntrega", servico.getDataMaxEntrega());
-//                    responseMap.put("erro", servico.getErro());
-//                    responseMap.put("msgErro", servico.getMsgErro());
+                    result = new GetPrazoEntregaResponse();
+                    result.setStatus("success");
+                    result.setMessage("Dados obtidos com sucesso");
+                    result.setResultado(calcPrazo);
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("Access-Control-Allow-Origin", "*");
-                    result = ResponseEntity.ok().headers(headers).body(responseMap);
+                    response = ResponseEntity.ok().headers(headers).body(result);
                 } else {
-                    result = ResponseEntity.noContent().build();
+                    response = ResponseEntity.noContent().build();
                 }
             } catch (Exception e) {
                 log.error("Error calling Correios API", e);
-                responseMap = new HashMap();
-                responseMap.put("status", "error");
-                responseMap.put("message", e.getMessage());
+                result = new GetPrazoEntregaResponse();
+                result.setStatus("error");
+                result.setMessage(e.getMessage());
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Access-Control-Allow-Origin", "*");
-                result = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(responseMap);
+                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(result);
             }
         }
-        return result;
+        return response;
     }
 }

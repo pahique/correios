@@ -1,4 +1,4 @@
-package br.com.deere.correios;
+package br.com.apicaller.correios;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 function renderRow(key, propertyName, propertyValue) {
   return <tr key={key} className="data-row"><td>{propertyName}</td><td>{propertyValue}</td></tr>
@@ -6,9 +6,10 @@ function renderRow(key, propertyName, propertyValue) {
 
 function renderResultado(resultado) {
   let rows = [];
-  if (resultado && resultado.servico) {
-    console.log("Servico: " + resultado.servico);
-    let servico = JSON.parse(resultado.servico);
+  console.log(resultado);
+  if (resultado && resultado.servicos) {
+    console.log("Servico: " + resultado.servicos[0]);
+    let servico = resultado.servicos[0];
     rows.push(renderRow('codigoServico', 'Código do Serviço', servico.codigo));
     rows.push(renderRow('prazoEntrega', 'Prazo Entrega', servico.prazoEntrega));
     rows.push(renderRow('entregaDomiciliar', 'Entrega Domiciliar', servico.entregaDomiciliar));

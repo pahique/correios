@@ -14,7 +14,7 @@ Teste de API REST dos correios para cálculo de prazo
 
 ## Server:
 
-  Executar SpringBoot, classe principal *br.com.deere.correios.CalcprecoprazoApplication*
+  Executar SpringBoot, classe principal *CalcprecoprazoApplication*
   
   Ou pela linha de comando:
   
