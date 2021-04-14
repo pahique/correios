@@ -11,8 +11,8 @@
 	<groupId>br.com.apicaller</groupId>
 	<artifactId>correios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>calcprecoprazo</name>
-	<description>Calculo Preço Prazo</description>
+	<name>correios</name>
+	<description>Calculo Prazo Correios</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
