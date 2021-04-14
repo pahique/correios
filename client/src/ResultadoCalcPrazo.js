@@ -10,14 +10,15 @@ function renderResultado(resultado) {
   if (resultado && resultado.servicos) {
     console.log("Servico: " + resultado.servicos[0]);
     let servico = resultado.servicos[0];
-    rows.push(renderRow('codigoServico', 'Código do Serviço', servico.codigo));
-    rows.push(renderRow('prazoEntrega', 'Prazo Entrega', servico.prazoEntrega));
-    rows.push(renderRow('entregaDomiciliar', 'Entrega Domiciliar', servico.entregaDomiciliar));
-    rows.push(renderRow('entregaSabado', 'Entrega Sábado', servico.entregaSabado));
-    rows.push(renderRow('dataMaxEntrega', 'Data Máxima de Entrega', servico.dataMaxEntrega));
     if (servico.erro) {
-      rows.push(renderRow('erro', 'Código de Erro', servico.erro));
-      rows.push(renderRow('msgErro', 'Mensagem de Erro', servico.msgErro));
+        rows.push(renderRow('erro', 'Código de Erro', servico.erro));
+        rows.push(renderRow('msgErro', 'Mensagem de Erro', servico.msgErro));
+    } else {
+        rows.push(renderRow('codigoServico', 'Código do Serviço', servico.codigo));
+        rows.push(renderRow('prazoEntrega', 'Prazo Entrega', servico.prazoEntrega));
+        rows.push(renderRow('entregaDomiciliar', 'Entrega Domiciliar', servico.entregaDomiciliar));
+        rows.push(renderRow('entregaSabado', 'Entrega Sábado', servico.entregaSabado));
+        rows.push(renderRow('dataMaxEntrega', 'Data Máxima de Entrega', servico.dataMaxEntrega));
     }
   }
   return rows;

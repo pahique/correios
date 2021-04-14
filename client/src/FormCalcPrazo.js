@@ -43,7 +43,6 @@ const FormCalcPrazo = props => {
 
     return (
         <section className="form-section">
-            <h2>Calculo de Prazo de Entrega</h2>
             <p className="error">{message}</p>
             <section className="field-section">
                 <div>

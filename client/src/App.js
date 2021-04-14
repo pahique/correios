@@ -27,6 +27,7 @@ class App extends Component {
       return (
         <div className="App">
           <header className="App-header">
+            <h2>Cálculo de Prazo de Entrega</h2>
           </header>
           <main>
             <FormCalcPrazo onCalcular={this.calcularPrazo}/>

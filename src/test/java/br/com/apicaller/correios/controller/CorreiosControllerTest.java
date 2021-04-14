@@ -1,9 +1,13 @@
 package br.com.apicaller.correios.controller;
 
+import br.com.apicaller.correios.exception.CepDestinoRequiredException;
+import br.com.apicaller.correios.exception.CepOrigemRequiredException;
+import br.com.apicaller.correios.exception.CodigoServicoRequiredException;
 import br.com.apicaller.correios.model.CalcPrazoResultado;
 import br.com.apicaller.correios.model.GetPrazoEntregaResponse;
 import br.com.apicaller.correios.model.Servico;
 import br.com.apicaller.correios.service.CorreiosService;
+import br.com.apicaller.correios.validator.CorreiosValidator;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,14 +19,15 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 
 public class CorreiosControllerTest {
 
     @Mock
     CorreiosService service;
+    @Mock
+    CorreiosValidator validator;
     @InjectMocks
     CorreiosController controller;
     @Rule
@@ -37,6 +42,7 @@ public class CorreiosControllerTest {
         servico.setEntregaSabado("S");
         servico.setDataMaxEntrega("09/04/2021");
         resultado.getServicos().add(servico);
+        Mockito.doNothing().when(validator).validatePrazoEntregaParameters(anyString(), anyString(), anyString());
         Mockito.when(service.calculaPrazo(anyString(), anyString(), anyString())).thenReturn(resultado);
 
         ResponseEntity response = controller.getPrazoEntregaCorreios("04014", "13341-632", "17514-014");
@@ -48,6 +54,7 @@ public class CorreiosControllerTest {
 
     @Test
     public void getPrazoEntregaCorreios_failCodigoServicoRequired() throws Exception {
+        Mockito.doThrow(new CodigoServicoRequiredException("Código do Serviço é obrigatório")).when(validator).validatePrazoEntregaParameters(any(), any(), any());
         ResponseEntity response = controller.getPrazoEntregaCorreios("", "13341-632", "17514-014");
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
@@ -56,6 +63,7 @@ public class CorreiosControllerTest {
 
     @Test
     public void getPrazoEntregaCorreios_failCepOrigemRequired() throws Exception {
+        Mockito.doThrow(new CepOrigemRequiredException("CEP de Origem é obrigatório")).when(validator).validatePrazoEntregaParameters(any(), any(), any());
         ResponseEntity response = controller.getPrazoEntregaCorreios("04014", "", "17514-014");
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
@@ -64,6 +72,7 @@ public class CorreiosControllerTest {
 
     @Test
     public void getPrazoEntregaCorreios_failCepDestinoRequired() throws Exception {
+        Mockito.doThrow(new CepDestinoRequiredException("CEP de Destino é obrigatório")).when(validator).validatePrazoEntregaParameters(any(), any(), any());
         ResponseEntity response = controller.getPrazoEntregaCorreios("04014", "13341-632", null);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
