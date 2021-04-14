@@ -3,9 +3,10 @@ package br.com.apicaller.correios.controller;
 import br.com.apicaller.correios.exception.CepDestinoRequiredException;
 import br.com.apicaller.correios.exception.CepOrigemRequiredException;
 import br.com.apicaller.correios.exception.CodigoServicoRequiredException;
+import br.com.apicaller.correios.exception.CorreiosServiceException;
 import br.com.apicaller.correios.model.CalcPrazoResultado;
 import br.com.apicaller.correios.model.GetPrazoEntregaResponse;
-import br.com.apicaller.correios.model.Servico;
+import br.com.apicaller.correios.model.CalcPrazoServico;
 import br.com.apicaller.correios.service.CorreiosService;
 import br.com.apicaller.correios.validator.CorreiosValidator;
 import org.junit.Assert;
@@ -36,7 +37,7 @@ public class CorreiosControllerTest {
     @Test
     public void getPrazoEntregaCorreios_success() throws Exception {
         CalcPrazoResultado resultado = new CalcPrazoResultado();
-        Servico servico = new Servico();
+        CalcPrazoServico servico = new CalcPrazoServico();
         servico.setCodigo("4014");
         servico.setEntregaDomiciliar("S");
         servico.setEntregaSabado("S");
@@ -48,7 +49,7 @@ public class CorreiosControllerTest {
         ResponseEntity response = controller.getPrazoEntregaCorreios("04014", "13341-632", "17514-014");
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
-        Servico responseServico = responseBody.getResultado().getServicos().get(0);
+        CalcPrazoServico responseServico = responseBody.getResultado().getServicos().get(0);
         Assert.assertEquals("09/04/2021", responseServico.getDataMaxEntrega());
     }
 
@@ -77,5 +78,15 @@ public class CorreiosControllerTest {
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
         Assert.assertEquals("CEP de Destino é obrigatório", responseBody.getMessage());
+    }
+
+    @Test
+    public void getPrazoEntregaCorreios_failCodigoServicoInvalido() throws Exception {
+        Mockito.doNothing().when(validator).validatePrazoEntregaParameters(anyString(), anyString(), anyString());
+        Mockito.doThrow(new CorreiosServiceException("001", "Código de serviço inválido")).when(service).calculaPrazo("XXXXX", "13341-632", "17514-014");
+        ResponseEntity response = controller.getPrazoEntregaCorreios("XXXXX", "13341-632", "17514-014");
+        Assert.assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
+        GetPrazoEntregaResponse responseBody = (GetPrazoEntregaResponse) response.getBody();
+        Assert.assertEquals("Código de serviço inválido", responseBody.getMessage());
     }
 }

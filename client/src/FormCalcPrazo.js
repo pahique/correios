@@ -22,6 +22,8 @@ const FormCalcPrazo = props => {
     }
 
     const handleClickCalcPrazo = () => {
+        setMessage('');
+        setResultado('');
         props.onCalcular({ codigoServico: (codigoServico ? codigoServico : ''),
                            cepOrigem: (cepOrigem ? cepOrigem : ''),
                            cepDestino: (cepDestino ? cepDestino : '') })
@@ -29,14 +31,11 @@ const FormCalcPrazo = props => {
                 console.log(response);
                 if (response && response.status === 'success') {
                     setResultado(response.resultado);
-                    setMessage('');
                 } else {
-                    setResultado('');
                     setMessage(response.message ? response.message : 'Erro ao calcular prazo');
                 }
              })
              .catch((error) => {
-                setResultado('');
                 setMessage('Erro ao acessar API');
              });
     }

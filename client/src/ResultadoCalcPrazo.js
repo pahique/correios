@@ -6,9 +6,7 @@ function renderRow(key, propertyName, propertyValue) {
 
 function renderResultado(resultado) {
   let rows = [];
-  console.log(resultado);
   if (resultado && resultado.servicos) {
-    console.log("Servico: " + resultado.servicos[0]);
     let servico = resultado.servicos[0];
     if (servico.erro) {
         rows.push(renderRow('erro', 'Código de Erro', servico.erro));

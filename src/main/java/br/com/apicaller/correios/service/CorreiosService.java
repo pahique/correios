@@ -1,5 +1,6 @@
 package br.com.apicaller.correios.service;
 
+import br.com.apicaller.correios.exception.CorreiosServiceException;
 import br.com.apicaller.correios.model.CalcPrazoResultado;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +20,7 @@ public class CorreiosService {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
-    public CalcPrazoResultado calculaPrazo(String codigoServico, String cepOrigem, String cepDestino) throws Exception {
+    public CalcPrazoResultado calculaPrazo(String codigoServico, String cepOrigem, String cepDestino) throws CorreiosServiceException, Exception {
         CalcPrazoResultado result = null;
         if (log.isDebugEnabled()) {
             log.debug(String.format("codigoServico: %s, cepOrigem: %s, cepDestino: %s", codigoServico, cepOrigem, cepDestino));
@@ -38,6 +39,13 @@ public class CorreiosService {
             JAXBContext context = JAXBContext.newInstance(CalcPrazoResultado.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             result = (CalcPrazoResultado) unmarshaller.unmarshal(xsr);
+            if (result != null && result.getServicos() != null && !result.getServicos().isEmpty()
+                    && result.getServicos().get(0).getMsgErro() != null
+                    && !result.getServicos().get(0).getMsgErro().isEmpty()) {
+                String codigoErro = result.getServicos().get(0).getErro();
+                String mensagemErro = result.getServicos().get(0).getMsgErro();
+                throw new CorreiosServiceException(codigoErro, mensagemErro);
+            }
         }
         return result;
     }

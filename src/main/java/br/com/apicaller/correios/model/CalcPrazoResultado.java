@@ -10,13 +10,13 @@ public class CalcPrazoResultado {
 
     @XmlElementWrapper(name="Servicos")
     @XmlElement(name="cServico")
-    private List<Servico> servicos = new ArrayList();
+    private List<CalcPrazoServico> servicos = new ArrayList();
 
-    public List<Servico> getServicos() {
+    public List<CalcPrazoServico> getServicos() {
         return servicos;
     }
 
-    public void setServicos(List<Servico> servicos) {
+    public void setServicos(List<CalcPrazoServico> servicos) {
         this.servicos = servicos;
     }
 }

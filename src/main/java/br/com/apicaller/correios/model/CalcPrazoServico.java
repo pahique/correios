@@ -3,7 +3,7 @@ package br.com.apicaller.correios.model;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Servico {
+public class CalcPrazoServico {
 
     @XmlElement(name = "Codigo")
     private String codigo;
@@ -29,7 +29,7 @@ public class Servico {
     @XmlElement(name = "DataMaxEntrega")
     private String dataMaxEntrega;
 
-    public Servico() {
+    public CalcPrazoServico() {
 
     }
 
