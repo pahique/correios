@@ -14,7 +14,7 @@ Teste de API REST dos correios para cálculo de prazo
 
 ## Server:
 
-  Executar SpringBoot, classe principal *CalcprecoprazoApplication*
+  Executar SpringBoot, classe principal *CorreiosApplication*
   
   Ou pela linha de comando:
   
