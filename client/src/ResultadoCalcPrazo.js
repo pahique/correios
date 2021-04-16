@@ -13,9 +13,9 @@ function renderResultado(resultado) {
         rows.push(renderRow('msgErro', 'Mensagem de Erro', servico.msgErro));
     } else {
         rows.push(renderRow('codigoServico', 'Código do Serviço', servico.codigo));
-        rows.push(renderRow('prazoEntrega', 'Prazo Entrega', servico.prazoEntrega));
-        rows.push(renderRow('entregaDomiciliar', 'Entrega Domiciliar', servico.entregaDomiciliar));
-        rows.push(renderRow('entregaSabado', 'Entrega Sábado', servico.entregaSabado));
+        rows.push(renderRow('prazoEntrega', 'Prazo Entrega (dias úteis)', servico.prazoEntrega));
+        rows.push(renderRow('entregaDomiciliar', 'Entrega Domiciliar', servico.entregaDomiciliar === 'S' ? "Sim" : "Não"));
+        rows.push(renderRow('entregaSabado', 'Entrega Sábado', servico.entregaSabado === 'S' ? "Sim" : "Não"));
         rows.push(renderRow('dataMaxEntrega', 'Data Máxima de Entrega', servico.dataMaxEntrega));
     }
   }
