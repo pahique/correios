@@ -8,6 +8,7 @@ const FormCalcPrazo = props => {
     const [cepOrigem, setCepOrigem] = useState('');
     const [cepDestino, setCepDestino] = useState('');
     const [resultado, setResultado] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChangeCodigoServico = event => {
         setCodigoServico(event.target.value);
@@ -24,10 +25,12 @@ const FormCalcPrazo = props => {
     const handleClickCalcPrazo = () => {
         setMessage('');
         setResultado('');
+        setLoading(true);
         props.onCalcular({ codigoServico: (codigoServico ? codigoServico : ''),
                            cepOrigem: (cepOrigem ? cepOrigem : ''),
                            cepDestino: (cepDestino ? cepDestino : '') })
              .then(response => {
+                setLoading(false);
                 console.log(response);
                 if (response && response.status === 'success') {
                     setResultado(response.resultado);
@@ -36,6 +39,7 @@ const FormCalcPrazo = props => {
                 }
              })
              .catch((error) => {
+                setLoading(false);
                 setMessage('Erro ao acessar API');
              });
     }
@@ -58,7 +62,8 @@ const FormCalcPrazo = props => {
                 </div>
             </section>
             <section className="button-section">
-                <button id="calcularButtonId" type="button" onClick={handleClickCalcPrazo}>Calcular Prazo</button>
+                <button id="calcularButtonId" type="button" onClick={handleClickCalcPrazo} disabled={loading}>Calcular Prazo</button>
+                {loading && <div>Aguarde ...</div>}
             </section>
             <section className="result-section">
                 <ResultadoCalcPrazo data={resultado}/>

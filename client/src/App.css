@@ -28,7 +28,7 @@ input {
 
 
 .App {
-  background-color: #BBBBBB;
+  background-color: #AAAAAA;
   padding: 3rem;
   width: 100%;
   min-height: 100vh;
@@ -146,17 +146,22 @@ button {
   background-color: steelblue;
 }
 
+button:disabled {
+  color: lightgray;
+}
+
 .button-section {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .button-section button {
   padding: 10px 20px;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   margin-right: 10px;
 }
 
@@ -165,6 +170,7 @@ button {
   border-left: 1px solid white;
   border-spacing: 0;
   margin: 20px 0px;
+  font-weight: bold;
 }
 
 .data-table th {
